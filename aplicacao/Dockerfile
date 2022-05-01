@@ -1,16 +1,18 @@
-FROM ruby:3.0.0 
+FROM ruby:3.0.0
 
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs 
-WORKDIR /myapp 
-COPY Gemfile /myapp/Gemfile 
-COPY Gemfile.lock /myapp/Gemfile.lock 
-RUN bundle install 
+ARG SYSTEM=/myapp
 
-# Add a script to be executed every time the container starts.
+WORKDIR ${SYSTEM}
+
+COPY Gemfile ${SYSTEM}
+COPY Gemfile.lock ${SYSTEM}
+
+RUN gem install bundler && bundle install
+
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
-EXPOSE 3000
 
-# Configure the main process to run when running the image
-CMD ["rails", "server", "-b", "0.0.0.0"]
+COPY . ${SYSTEM}
+EXPOSE 3000
