@@ -30,7 +30,7 @@ jobs:
         run: docker-compose up -d 
       - name: Run test
         working-directory: ./aplicacao
-        run: docker exec app bash -c "rails db:reset; rspec"
+        run: docker exec web bash -c "rails db:reset; rspec"
 
   lint:
     runs-on: ubuntu-latest
@@ -43,4 +43,4 @@ jobs:
         run: docker-compose up -d 
       - name: Run lint
         working-directory: ./aplicacao
-        run: docker exec app bash -c "gem install rubocop; rubocop -A --fail-level F"
+        run: docker exec web bash -c "gem install rubocop; rubocop -A --fail-level F"
